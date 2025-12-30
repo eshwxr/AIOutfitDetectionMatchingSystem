@@ -1,0 +1,101 @@
+# FLICKD Configuration
+
+# Model Settings
+models:
+  yolo:
+    model_path: "yolov8n.pt"
+    confidence_threshold: 0.5
+    iou_threshold: 0.45
+  
+  clip:
+    model_name: "ViT-B-32"
+    pretrained: "openai"
+    device: "cuda"  # or "cpu"
+  
+  vibe_classifier:
+    model_name: "ViT-B-32"
+    pretrained: "openai"
+
+# Detection Settings
+detection:
+  frame_extraction_fps: 1.0  # Extract 1 frame per second
+  min_confidence: 0.5
+  fashion_classes:
+    - "person"  # Will map to fashion items
+    - "handbag"
+    - "backpack"
+    - "umbrella"
+    - "tie"
+    - "suitcase"
+  
+  # Map COCO classes to fashion categories
+  class_mapping:
+    "person": ["top", "bottom", "dress", "jacket"]
+    "handbag": ["bag"]
+    "backpack": ["bag"]
+    "umbrella": ["accessory"]
+    "tie": ["accessory"]
+    "suitcase": ["bag"]
+
+# Matching Settings
+matching:
+  similarity_thresholds:
+    exact_match: 0.9
+    similar_match: 0.75
+    no_match: 0.75
+  
+  top_k: 5  # Return top 5 matches
+  
+  faiss_index_path: "data/models/faiss_index.bin"
+  catalog_embeddings_path: "data/models/catalog_embeddings.npy"
+  catalog_metadata_path: "data/models/catalog_metadata.pkl"
+
+# Vibe Classification
+vibes:
+  supported_vibes:
+    - "Coquette"
+    - "Clean Girl"
+    - "Cottagecore"
+    - "Streetcore"
+    - "Y2K"
+    - "Boho"
+    - "Party Glam"
+  
+  top_k_vibes: 3  # Return top 1-3 vibes
+  min_confidence: 0.3
+
+# Color Extraction
+color:
+  num_colors: 3  # Number of dominant colors to extract
+  color_names:
+    - "black"
+    - "white"
+    - "red"
+    - "blue"
+    - "green"
+    - "yellow"
+    - "orange"
+    - "pink"
+    - "purple"
+    - "brown"
+    - "gray"
+    - "beige"
+    - "navy"
+    - "maroon"
+    - "teal"
+
+# Paths
+paths:
+  videos_dir: "data/videos"
+  catalog_dir: "data/catalog"
+  frames_dir: "data/frames"
+  crops_dir: "data/crops"
+  models_dir: "data/models"
+
+# API Settings
+api:
+  host: "0.0.0.0"
+  port: 8000
+  reload: false
+
+
