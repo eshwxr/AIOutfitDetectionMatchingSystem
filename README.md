@@ -41,76 +41,6 @@ flowchart TD
 7. **Vibe Classification**: CLIP-Text encoder analyzes captions and hashtags to classify videos into 1-3 fashion vibes (Coquette, Clean Girl, Cottagecore, Streetcore, Y2K, Boho, Party Glam)
 8. **Output**: Structured JSON with detected vibes, matched products, colors, and confidence scores
 
-## Installation
-
-```bash
-# Clone repository
-git clone <repository-url>
-cd FLICKD
-
-# Create virtual environment
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-
-# Install dependencies
-pip install -r requirements.txt
-
-# Create data directories
-mkdir -p data/videos data/catalog data/frames data/crops data/models
-```
-
-## Quick Start
-
-### 1. Build Product Index
-
-```bash
-python build_index.py --catalog-path data/catalog/catalog.csv
-```
-
-The catalog CSV should have columns: `product_id` (or `id`), `product_name` (optional), and `image_url`.
-
-### 2. Start API Server
-
-```bash
-python run_api.py
-```
-
-The API will be available at `http://localhost:8000`
-
-### 3. Process Videos
-
-**Via API:**
-```bash
-curl -X POST http://localhost:8000/process-video \
-  -H "Content-Type: application/json" \
-  -d '{
-    "video_id": "abc123",
-    "video_path": "data/videos/sample.mp4",
-    "caption": "Coquette summer vibes",
-    "hashtags": "#coquette #summer"
-  }'
-```
-
-**Via Script:**
-```bash
-python src/process_video.py \
-  --video-path data/videos/sample.mp4 \
-  --video-id sample_001 \
-  --caption "Your caption" \
-  --hashtags "#hashtags"
-```
-
-**Batch Processing:**
-```bash
-python process_dataset.py --dataset-dir /path/to/dataset --output-dir results
-```
-
-## API Endpoints
-
-- `POST /process-video`: Process a video and return tagged products and vibes
-- `GET /health`: Health check endpoint
-- `POST /build-index`: Build/rebuild FAISS index from catalog
-
 ## Output Format
 
 ```json
@@ -130,61 +60,6 @@ python process_dataset.py --dataset-dir /path/to/dataset --output-dir results
 }
 ```
 
-## Configuration
-
-Edit `config/config.yaml` to adjust:
-- Model settings (YOLOv8, CLIP)
-- Detection thresholds
-- Matching similarity thresholds (0.75, 0.9)
-- Supported vibes
-- Frame extraction rate
-
-## Testing
-
-### Unit Tests
-
-```bash
-# Run all tests
-pytest
-
-# Run specific test file
-pytest tests/test_detection.py
-
-# Run with coverage
-pytest --cov=src
-```
-
-### Test Video Processing
-
-Test the complete pipeline on a video:
-
-```bash
-# Test with AI Hackathon video
-python test_video.py --video-path "/path/to/video.mp4"
-
-# Save results to file
-python test_video.py --video-path "/path/to/video.mp4" --output results.json
-```
-
-**Note**: First run will download YOLOv8 and CLIP models (requires internet connection).
-
-See [TESTING.md](TESTING.md) for detailed testing guide.
-
-## Project Structure
-
-```
-FLICKD/
-├── src/
-│   ├── detection/          # Object detection pipeline
-│   ├── matching/           # Product matching engine
-│   ├── classification/     # Vibe classification
-│   ├── utils/             # Utilities (color, video loading)
-│   └── api/               # FastAPI application
-├── tests/                 # Test suite
-├── config/                # Configuration files
-└── data/                  # Data directories (gitignored)
-```
-
 ## Tech Stack
 
 - **YOLOv8**: Object detection (ultralytics)
@@ -193,12 +68,6 @@ FLICKD/
 - **FastAPI**: REST API framework
 - **OpenCV**: Video processing
 - **scikit-learn**: Color extraction
-
-## Documentation
-
-- [DATASET_ADAPTATIONS.md](DATASET_ADAPTATIONS.md) - Dataset format handling
-- [CONTRIBUTING.md](CONTRIBUTING.md) - Development guidelines
-- [TESTING.md](TESTING.md) - Testing guide
 
 ## License
 
